@@ -2,9 +2,9 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder):
     """ Calculates coverage and policies by flood depth
     
         Keyword arguments:
-        depth_grids: list<str> -- array of file path names to the depth grid rasters
-        NFIP_points: str -- Shapefile containing the NFIP points. Must contain fields: LOW_FLOOR, LOWADJ_GRA, T_COV_BLDG, T_COV_CONT, POL_NO, STATEFP and NAME 
-        out_folder: str -- file path name to directory for outputs
+            depth_grids: list<str> -- array of file path names to the depth grid rasters
+            NFIP_points: str -- Shapefile containing the NFIP points. Must contain fields: LOW_FLOOR, LOWADJ_GRA, T_COV_BLDG, T_COV_CONT, POL_NO, STATEFP and NAME
+            out_folder: str -- file path name to directory for outputs
     """
     # imports 
     import geopandas as gpd
