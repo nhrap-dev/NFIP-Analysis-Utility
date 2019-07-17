@@ -1,4 +1,4 @@
-def NFIP_PNNL(depth_grids, NFIP_points, out_folder):
+def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     """ Calculates coverage and policies by flood depth
     
         Keyword arguments:
@@ -148,11 +148,11 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder):
     # Bin depth values
     gdf['Depth_Bins'] = '0'
     # gdf['Depth_Bins'][gdf['Depth'] == 0] = '0'
-    gdf['Depth_Bins'][(gdf['Depth'] > 0) & (gdf['Depth'] <= 1)] = '0 to 1'
-    gdf['Depth_Bins'][(gdf['Depth'] > 1) & (gdf['Depth'] <= 3)] = '1 to 3'
-    gdf['Depth_Bins'][(gdf['Depth'] > 3) & (gdf['Depth'] <= 6)] = '3 to 6'
-    gdf['Depth_Bins'][(gdf['Depth'] > 6) & (gdf['Depth'] <= 9)] = '6 to 9'
-    gdf['Depth_Bins'][gdf['Depth'] > 9] = 'greater than 9'
+    gdf['Depth_Bins'][(gdf['Depth_Above_FFH'] > 0) & (gdf['Depth_Above_FFH'] <= 1)] = '0 to 1'
+    gdf['Depth_Bins'][(gdf['Depth_Above_FFH'] > 1) & (gdf['Depth_Above_FFH'] <= 3)] = '1 to 3'
+    gdf['Depth_Bins'][(gdf['Depth_Above_FFH'] > 3) & (gdf['Depth_Above_FFH'] <= 6)] = '3 to 6'
+    gdf['Depth_Bins'][(gdf['Depth_Above_FFH'] > 6) & (gdf['Depth_Above_FFH'] <= 9)] = '6 to 9'
+    gdf['Depth_Bins'][gdf['Depth_Above_FFH'] > 9] = 'greater than 9'
     # Sorting columns
     try:
         gdf['State'] = shp['STATEFP_1']
@@ -178,6 +178,11 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder):
     # t1 = time()
     # os.remove(out_mosiac_fp) #unable to bc of file lock
     # print(time() - t1)
+    if export_shapefile:
+        print('Exporting spatial output')
+    t1 = time()
+    gdf.to_file(out_folder + '/' + "output.shp", driver='ESRI Shapefile')
+    print(time() - t1)
     print('Total elapsed time: ' + str(time() - t0))
 
 
@@ -186,4 +191,4 @@ depth_grids = [r'C:\projects\Barry\RIFT20190712rasters\RIFT20190712rasters/0808p
 NFIP_points = r'C:\projects\Barry/NFIP.shp'
 out_folder = r'C:\projects\Barry/output'
 
-NFIP_PNNL(depth_grids, NFIP_points, out_folder)
+NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False)
