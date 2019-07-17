@@ -165,10 +165,6 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
         pivot_coverage.to_csv(out_folder + '/pivot_coverage.csv')
         pivot_policies.to_csv(out_folder + '/pivot_policies.csv')
     print(time() - t1)
-    # print('Cleaning')
-    # t1 = time()
-    # os.remove(out_mosiac_fp) #unable to bc of file lock
-    # print(time() - t1)
     if export_shapefile:
         print('Exporting spatial output')
         t1 = time()
@@ -177,9 +173,9 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     print('Total elapsed time: ' + str(time() - t0))
 
 
-depth_grids = [r'C:\projects\Barry\07142019\RIFT20190714rasters/0808peak_flood_depthft_bin.tiff',
-    r'C:\projects\Barry\07142019\RIFT20190714rasters/0809peak_flood_depthft_bin.tiff']
+depth_grids = [r'C:\projects\Barry\07172019\RIFT20190717_hindcast_rasters/0808peak_flood_depthft_bin.tiff',
+    r'C:\projects\Barry\07172019\RIFT20190717_hindcast_rasters/0809peak_flood_depthft_bin.tiff']
 NFIP_points = r'C:\projects\Barry/NFIP.shp'
-out_folder = r'C:\projects\Barry/07142019/new_outputs'
+out_folder = r'C:\projects\Barry/07172019'
 
 NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False)
