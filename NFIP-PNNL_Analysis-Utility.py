@@ -143,7 +143,7 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     gdf['Depth_Bins'][(gdf['Depth_Above_FFH'] > 1) & (gdf['Depth_Above_FFH'] <= 3)] = '1 to 3'
     gdf['Depth_Bins'][(gdf['Depth_Above_FFH'] > 3) & (gdf['Depth_Above_FFH'] <= 6)] = '3 to 6'
     gdf['Depth_Bins'][(gdf['Depth_Above_FFH'] > 6) & (gdf['Depth_Above_FFH'] <= 9)] = '6 to 9'
-    gdf['Depth_Bins'][gdf['Depth_Above_FFH'] > 9] = 'greater than 9'
+    gdf['Depth_Bins'][gdf['Depth_Above_FFH'] > 9] = '> 9'
     # Sorting columns
     try:
         gdf['State'] = shp['STATEFP_1']
