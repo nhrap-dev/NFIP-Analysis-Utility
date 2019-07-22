@@ -17,7 +17,7 @@
 <h4>Check if you have the bigtiff driver</h4>
 Note: 
 
-* working with bigtiff files requires gdal=4+; libtiff=4+; and vs2015_runtime=14
+* working with bigtiff files requires gdal=4+; libtiff=4+; and vs2015_runtime=14.x
 * bigtiff driver works running a Python console not an IPython console
 
 ```
