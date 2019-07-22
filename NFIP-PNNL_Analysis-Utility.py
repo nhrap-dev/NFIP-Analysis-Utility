@@ -178,10 +178,18 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
         print(time() - t1)
     print('Total elapsed time: ' + str(time() - t0))
 
+### run ###
+
+## use if pointing to a folder of TIF files rather than a list of strings
+## only change tif_folder to your folder path
+# import os
+# tif_folder = r'C:\projects\Barry\katrisk\bigtifs'
+# dir = os.listdir(tif_folder)
+# depth_grids = [tif_folder + '/' + x for x in dir if x.endswith('.tif') or x.endswith('.tiff')]
 
 depth_grids = [r'C:\projects\Barry\07142019\RIFT20190714rasters/0808peak_flood_depthft_bin.tiff',
     r'C:\projects\Barry\07142019\RIFT20190714rasters/0809peak_flood_depthft_bin.tiff']
 NFIP_points = r'C:\projects\Barry/NFIP.shp'
-out_folder = r'C:\projects\Barry\07142019/test_output2'
+out_folder = r'C:\projects\Barry\katrisk'
 
 NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False)
