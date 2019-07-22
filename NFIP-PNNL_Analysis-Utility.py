@@ -36,13 +36,20 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
         geoms = list(map(lambda x: mapping(x), point_geodataframe.geometry.values))
         x = list(map(lambda x: x['coordinates'][0], geoms))
         y = list(map(lambda x: x['coordinates'][1], geoms))
+        xy = np.dstack((x, y))
+        xys = [tuple(list(x)) for x in xy[0,:,:]]
+        t = xy[0,:,:]
         print('Extracting depths from rasters')
         depths_array = []
         for grid in list_of_rasters:
             ras = rio.open(grid)
             depths = []
-            for val in ras.sample(zip(x, y)):
-                depths.append(float(val))
+            for coord in xys:
+                try:
+                    for val in ras.sample([coord]):
+                        depths.append(float(val))
+                except:
+                    depths.append(float(-1))
             depths_array.append(depths)
         return depths_array
 
@@ -173,9 +180,9 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     print('Total elapsed time: ' + str(time() - t0))
 
 
-depth_grids = [r'C:\projects\Barry\07172019\RIFT20190717_hindcast_rasters/0808peak_flood_depthft_bin.tiff',
-    r'C:\projects\Barry\07172019\RIFT20190717_hindcast_rasters/0809peak_flood_depthft_bin.tiff']
+depth_grids = [r'C:\projects\Barry\07142019\RIFT20190714rasters/0808peak_flood_depthft_bin.tiff',
+    r'C:\projects\Barry\07142019\RIFT20190714rasters/0809peak_flood_depthft_bin.tiff']
 NFIP_points = r'C:\projects\Barry/NFIP.shp'
-out_folder = r'C:\projects\Barry/07172019'
+out_folder = r'C:\projects\Barry\07142019/test_output2'
 
 NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False)

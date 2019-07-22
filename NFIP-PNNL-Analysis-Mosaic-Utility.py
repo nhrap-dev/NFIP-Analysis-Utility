@@ -186,9 +186,9 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     print('Total elapsed time: ' + str(time() - t0))
 
 
-depth_grids = [r'C:\projects\Barry\RIFT20190712rasters\RIFT20190712rasters/0808peak_flood_depthft_bin.tiff',
-    r'C:\projects\Barry\RIFT20190712rasters\RIFT20190712rasters/0809peak_flood_depthft_bin.tiff']
+depth_grids = [r'C:\projects\Barry\07142019\RIFT20190714rasters/0808peak_flood_depthft_bin.tiff',
+    r'C:\projects\Barry\07142019\RIFT20190714rasters/0809peak_flood_depthft_bin.tiff']
 NFIP_points = r'C:\projects\Barry/NFIP.shp'
-out_folder = r'C:\projects\Barry/output'
+out_folder = r'C:\projects\Barry\07142019/test_output'
 
 NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False)
