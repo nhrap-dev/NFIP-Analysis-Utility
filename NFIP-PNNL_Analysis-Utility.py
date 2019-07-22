@@ -38,7 +38,6 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
         y = list(map(lambda x: x['coordinates'][1], geoms))
         xy = np.dstack((x, y))
         xys = [tuple(list(x)) for x in xy[0,:,:]]
-        t = xy[0,:,:]
         print('Extracting depths from rasters')
         depths_array = []
         for grid in list_of_rasters:
