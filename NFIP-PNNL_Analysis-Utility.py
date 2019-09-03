@@ -21,6 +21,14 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     import os
 
     def consolidate_lists(array_of_lists):
+        """Consolidates an array of lists sequentially
+
+        Arguments:
+            array_of_lists: list<list>
+
+        Return:
+            consolidated_lists: list 
+        """
         print('Consolidating lists')
         consolidated_lists = []
         for i in range(len(array_of_lists)):
@@ -32,6 +40,17 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
         return consolidated_lists
 
     def extract_depths(depth_grids, NFIP_gdf):
+        """ Extracts depths from PNNL RIFT rasters or CERA ADCIRC coastal surge polygons to NFIP points
+
+        Arguments:
+            depth_grids: path to GDAL raster file || path to Fiona vector file
+            NFIP_gdf: Point GeoDataframe
+
+        Returns:
+            sjoin: Point GeoDataframe -- adds depth column to NFIP_gdf
+            ||
+            depths_array: list<list> -- subsequent lists of all depth values for each raster in depth_grids for every NFIP_gdf point
+        """
         if depth_grids[0].split('.')[-1] == 'shp':
             print('Extracting depths from polygons')
             # handle NFIP projection
@@ -211,8 +230,8 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
 # dir = os.listdir(tif_folder)
 # depth_grids = [tif_folder + '/' + x for x in dir if x.endswith('.tif') or x.endswith('.tiff')]
 
+# depth_grids = [x for x in os.listdir if x.endswith('tiff')]
 depth_grids = ['C:\projects\Disasters\Dorian\Data\CERA/maxelevProj_0903.shp']
-depth_grids = [x for x in os.listdir if x.endswith('tiff')]
 NFIP_points = r'C:\projects\Disasters\Dorian\Data\NFIP\Dorian_NFIP_CERA_elevs_09012019/Dorian_NFIP_CERA_elevs_09012019.shp'
 out_folder = r'C:\projects\Disasters\Dorian\outputs\NFIP_20190903'
 
