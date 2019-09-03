@@ -23,87 +23,101 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     def consolidate_lists(array_of_lists):
         print('Consolidating lists')
         consolidated_lists = []
-        for i in range(len(array_of_lists)-1):
+        for i in range(len(array_of_lists)):
             if i == 0:
                 consolidated_lists = array_of_lists[0]
-            if i <= len(array_of_lists) - 2:
+            if i <= len(array_of_lists) - 1:
                 new_values = [x if x >=0  else array_of_lists[i+1][index] for index, x in enumerate(consolidated_lists)]
                 consolidated_lists = new_values
         return consolidated_lists
 
-    def extract_depths(list_of_rasters, point_geodataframe):
-        print('Mapping geometry for processing')
-        geoms = list(map(lambda x: mapping(x), point_geodataframe.geometry.values))
-        x = list(map(lambda x: x['coordinates'][0], geoms))
-        y = list(map(lambda x: x['coordinates'][1], geoms))
-        xy = np.dstack((x, y))
-        xys = [tuple(list(x)) for x in xy[0,:,:]]
-        print('Extracting depths from rasters')
-        depths_array = []
-        for grid in list_of_rasters:
-            ras = rio.open(grid)
-            depths = []
-            for coord in xys:
-                try:
-                    for val in ras.sample([coord]):
-                        depths.append(float(val))
-                except:
-                    depths.append(float(-1))
-            depths_array.append(depths)
-        return depths_array
+    def extract_depths(depth_grids, NFIP_gdf):
+        if depth_grids[0].split('.')[-1] == 'shp':
+            print('Extracting depths from polygons')
+            # handle NFIP projection
+            # TODO reproject to common
+            dgPoly = gpd.read_file(depth_grids[0])
+            if NFIP_gdf.crs['init'] != dgPoly.crs['init']:
+                print('proceeding, but projections do not match between NFIP and CERA data')
+            sjoin = gpd.sjoin(NFIP_gdf, dgPoly, how="left", op="intersects")
+            return sjoin
+        else:
+            print('Mapping geometry for processing')
+            geoms = list(map(lambda x: mapping(x), NFIP_gdf.geometry.values))
+            x = list(map(lambda x: x['coordinates'][0], geoms))
+            y = list(map(lambda x: x['coordinates'][1], geoms))
+            xy = np.dstack((x, y))
+            xys = [tuple(list(x)) for x in xy[0,:,:]]
+            print('Extracting depths from rasters')
+            depths_array = []
+            try:
+                for grid in depth_grids:
+                    ras = rio.open(grid)
+                    depths = []
+                    for coord in xys:
+                        try:
+                            for val in ras.sample([coord]):
+                                depths.append(float(val))
+                        except:
+                            depths.append(float(-1))
+                    depths_array.append(depths)
+            except:
+                print('error extracting depths from rasters')
+            print('depths extracted')
+            return depths_array
 
     StateFipsCodes = {
-    "01": "Alabama",
-    "02": "Alaska",
-    "04": "Arizona",
-    "05": "Arkansas",
-    "06": "California",
-    "08": "Colorado",
-    "09": "Connecticut",
-    "10": "Delaware",
-    "11": "District of Columbia",
-    "12": "Florida",
-    "13": "Geogia",
-    "15": "Hawaii",
-    "16": "Idaho",
-    "17": "Illinois",
-    "18": "Indiana",
-    "19": "Iowa",
-    "20": "Kansas",
-    "21": "Kentucky",
-    "22": "Louisiana",
-    "23": "Maine",
-    "24": "Maryland",
-    "25": "Massachusetts",
-    "26": "Michigan",
-    "27": "Minnesota",
-    "28": "Mississippi",
-    "29": "Missouri",
-    "30": "Montana",
-    "31": "Nebraska",
-    "32": "Nevada",
-    "33": "New Hampshire",
-    "34": "New Jersey",
-    "35": "New Mexico",
-    "36": "New York",
-    "37": "North Carolina",
-    "38": "North Dakota",
-    "39": "Ohio",
-    "40": "Oklahoma",
-    "41": "Oregon",
-    "42": "Pennsylvania",
-    "44": "Rhode Island",
-    "45": "South Carolina",
-    "46": "South Dakota",
-    "47": "Tennessee",
-    "48": "Texas",
-    "49": "Utah",
-    "50": "Vermont",
-    "51": "Virginia",
-    "53": "Washington",
-    "54": "West Virginia",
-    "55": "Wisconsin",
-    "56": "Wyoming"
+        "01": "Alabama",
+        "02": "Alaska",
+        "04": "Arizona",
+        "05": "Arkansas",
+        "06": "California",
+        "08": "Colorado",
+        "09": "Connecticut",
+        "10": "Delaware",
+        "11": "District of Columbia",
+        "12": "Florida",
+        "13": "Geogia",
+        "15": "Hawaii",
+        "16": "Idaho",
+        "17": "Illinois",
+        "18": "Indiana",
+        "19": "Iowa",
+        "20": "Kansas",
+        "21": "Kentucky",
+        "22": "Louisiana",
+        "23": "Maine",
+        "24": "Maryland",
+        "25": "Massachusetts",
+        "26": "Michigan",
+        "27": "Minnesota",
+        "28": "Mississippi",
+        "29": "Missouri",
+        "30": "Montana",
+        "31": "Nebraska",
+        "32": "Nevada",
+        "33": "New Hampshire",
+        "34": "New Jersey",
+        "35": "New Mexico",
+        "36": "New York",
+        "37": "North Carolina",
+        "38": "North Dakota",
+        "39": "Ohio",
+        "40": "Oklahoma",
+        "41": "Oregon",
+        "42": "Pennsylvania",
+        "44": "Rhode Island",
+        "45": "South Carolina",
+        "46": "South Dakota",
+        "47": "Tennessee",
+        "48": "Texas",
+        "49": "Utah",
+        "50": "Vermont",
+        "51": "Virginia",
+        "53": "Washington",
+        "54": "West Virginia",
+        "55": "Wisconsin",
+        "56": "Wyoming"
     }
 
     # formats output string
@@ -117,20 +131,23 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     print(time() - t1)
 
     t1 = time()
-    depths_array = extract_depths(depth_grids, shp)
+    extract = extract_depths(depth_grids, shp)
     print(time() - t1)
 
-
-    t1 = time()
-    depths = consolidate_lists(depths_array)
-    print(time() - t1)
     
     print('Calculating fields')
     t1 = time()
-    gdf = gpd.GeoDataFrame(data=depths,geometry=shp.geometry)
-    gdf.columns = ['Depth', gdf.columns[1]]
+    if type(extract) == list:
+        t1 = time()
+        print('consolidating depth lists')
+        depths = consolidate_lists(extract)
+        print(time() - t1)
+        gdf = gpd.GeoDataFrame(data=depths,geometry=shp.geometry)
+    else:
+        gdf = extract[['max_ft', 'geometry']]
+    gdf.columns = ['Depth', 'geometry']
     # Calculate first floor height
-    gdf['FFH'] = shp['LOW_FLOOR'] = shp['LOWADJ_GRA']
+    gdf['FFH'] = shp['LOW_FLOOR'] - shp['LOWADJ_GRA']
     # Handle null values
     gdf['FFH'][gdf['FFH'] >= 9000] = 1
     gdf['FFH'][gdf['FFH'] < 1] = 1
@@ -152,14 +169,21 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
     gdf['Depth_Bins'][gdf['Depth_Above_FFH'] > 9] = '> 9'
     # Sorting columns
     try:
-        gdf['State'] = shp['STATEFP_1']
+        stateNames = ['STATEFP_1', 'STATEFP']
+        for name in stateNames:
+            if name in shp.columns:
+                gdf['State'] = shp[name]
+        gdf = gdf.replace({'State': StateFipsCodes})
     except:
-        gdf['State'] = shp['STATEFP']
-    gdf = gdf.replace({'State': StateFipsCodes})
-    try: 
-        gdf['County'] = shp['NAMELSAD_1']
+        print('cant find state name')
+        
+    try:
+        countyNames = ['NAMELSAD_1', 'NAME', 'COUNTY_NAM']
+        for name in countyNames:
+            if name in shp.columns:
+                gdf['County'] = shp[name]
     except:
-        gdf['County'] = shp['NAME']
+        print('cant find county name')
 
     # Summarize
     pivot_coverage = pd.pivot_table(gdf, values='Coverage', index=['State', 'County'], columns='Depth_Bins', aggfunc=np.sum, margins=True)
@@ -187,9 +211,18 @@ def NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False):
 # dir = os.listdir(tif_folder)
 # depth_grids = [tif_folder + '/' + x for x in dir if x.endswith('.tif') or x.endswith('.tiff')]
 
-depth_grids = [r'C:\projects\Barry\07142019\RIFT20190714rasters/0808peak_flood_depthft_bin.tiff',
-    r'C:\projects\Barry\07142019\RIFT20190714rasters/0809peak_flood_depthft_bin.tiff']
-NFIP_points = r'C:\projects\Barry/NFIP.shp'
-out_folder = r'C:\projects\Barry\katrisk'
+depth_grids = ['C:\projects\Disasters\Dorian\Data\CERA/maxelevProj_0903.shp']
+depth_grids = [x for x in os.listdir if x.endswith('tiff')]
+NFIP_points = r'C:\projects\Disasters\Dorian\Data\NFIP\Dorian_NFIP_CERA_elevs_09012019/Dorian_NFIP_CERA_elevs_09012019.shp'
+out_folder = r'C:\projects\Disasters\Dorian\outputs\NFIP_20190903'
 
 NFIP_PNNL(depth_grids, NFIP_points, out_folder, export_shapefile=False)
+
+
+# TODO
+"""
+get working
+add gui
+add CERA (ADCIRC)
+add katrisk
+"""
