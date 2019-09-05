@@ -10,7 +10,7 @@ It can use a GDAL supported raster file as a depth grid or a Fiona supported pol
 <h3>Use</h3>
 
 * Install all libraries in NFIP-Analysis-Utility.py
-* In a terminal, run ```python __main__.py```
+* In a terminal, run ```python __main__.py``` in the repository directory
 
 <h3>Caveats</h3>
 
