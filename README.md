@@ -8,16 +8,14 @@ LOW_FLOOR, LOWADJ_GRA, T_COV_BLDG, T_COV_CONT, POL_NO
 It can use a GDAL supported raster file as a depth grid or a Fiona supported polygon file.
 
 <h3>Use</h3>
-<h4>NFIP-Analysis-Utility.py</h4>
 
-* scroll to the bottom
-* assign the variables: depth_grids, NFIP_points, and out_folder
-* run the entire script
+* Install all libraries in NFIP-Analysis-Utility.py
+* run ```python __main__.py```
 
 <h3>Caveats</h3>
 
 * Projection: The CERA ADCIRC data is distributed in GCS WGS84 (EPSG 4326), whereas the NFIP data is distributed PCS NAD83 (EPSG 4269). The script does not (yet) handle projections. The projections do change the numbers slightly.
-* Elevation: The CERA ADCIRC data are generally distributed with elevations at mean sea level (MSL), but are sometimes distributed with elevations relative to NAVD88. The NFIP elevations are relative to NAVD88. The script does not (yet) handle differences between MSL and NAVD88. These do provide differences in the results and must be corrected prior to running.
+* Elevation: The CERA ADCIRC data are generally distributed with elevations at mean sea level (MSL), but are sometimes distributed with elevations relative to NAVD88. The NFIP elevations are relative to USGS NED 10m. The script does not (yet) handle differences between MSL, NAVD88, and NED. These do provide differences in the results and must be corrected prior to running.
 
 
 <h3>Other notes</h3>
