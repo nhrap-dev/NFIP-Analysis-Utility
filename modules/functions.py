@@ -53,7 +53,9 @@ def AnalyzeNFIP(depth_grids, NFIP_points, out_folder, export_shapefile=False):
             depths_array = []
             try:
                 for grid in depth_grids:
+                    print('reading raster')
                     ras = rio.open(grid)
+                    print('extracting depths')
                     depths = []
                     for coord in xys:
                         try:

@@ -62,6 +62,13 @@ def run_gui():
         root_h = 400
         root_w = 460
         root.geometry(str(root_w) + 'x' + str(root_h))
+        windowWidth = root.winfo_reqwidth()
+        windowHeight = root.winfo_reqheight()
+        # Gets both half the screen width/height and window width/height
+        positionRight = int(root.winfo_screenwidth()/2 - windowWidth/2)
+        positionDown = int(root.winfo_screenheight()/3 - windowHeight/2)
+        # Positions the window in the center of the page.
+        root.geometry("+{}+{}".format(positionRight, positionDown))
         root.configure(background='#282a36')
 
         #App icon
