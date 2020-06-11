@@ -7,7 +7,7 @@ This script takes NFIP policy points and analyzes coverage and counts of inland 
 - Must have Python 3.X installed
 - Must have all the Python packages installed listed in the requirements.txt
 - It requires NFIP policy points with the following valid fields: LOW_FLOOR, LOWADJ_GRA, T_COV_BLDG, T_COV_CONT, POL_NO
-- It take any GDAL supported raster file as a depth grid or a Fiona supported polygon file.
+- The tool can take any GDAL supported raster file as a depth grid or a Fiona supported polygon file.
 
 <h3>Setup</h3>
 
