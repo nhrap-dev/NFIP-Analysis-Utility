@@ -2,14 +2,14 @@
 
 This script takes NFIP policy points and analyzes coverage and counts of inland flooding and coastal surge.
 
-<h3>Requirements<h3>
+<h3>Requirements</h3>
 
 - Must have Python 3.X installed
 - Must have all the Python packages installed listed in the requirements.txt
 - It requires NFIP policy points with the following valid fields: LOW_FLOOR, LOWADJ_GRA, T_COV_BLDG, T_COV_CONT, POL_NO
 - It take any GDAL supported raster file as a depth grid or a Fiona supported polygon file.
 
-<h3>Setup<h3>
+<h3>Setup</h3>
 
 - Install all Python packages in requirements.txt. Double click on setup.py.
   - This must be a Python 3.X environment. If setup.py doesn't work, you can open a terminal in the tool directory, you can run `pip install -r requirements.txt`.
