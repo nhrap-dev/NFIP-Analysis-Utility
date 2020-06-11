@@ -14,7 +14,7 @@ This script takes NFIP policy points and analyzes coverage and counts of inland 
 - Install all Python packages in requirements.txt. Double click on setup.py.
   - This must be a Python 3.X environment. If setup.py doesn't work, you can open a terminal in the tool directory, you can run `pip install -r requirements.txt`.
 
-<h3>Use</h3>
+<h3>To Use</h3>
 
 - Project all data to the same projected coordinate system.
 - Double click on NFIP-Analysis-Tool.pyw to run.
